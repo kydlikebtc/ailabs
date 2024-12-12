@@ -9,7 +9,9 @@ class TestClaudeSingleton(unittest.TestCase):
         self.default_claude_config = ModelConfig(
             provider='anthropic',
             model_name='claude-2',
-            temperature=0.7
+            temperature=0.7,
+            max_tokens=1000,
+            api_key='test-key'
         )
         self.ai_config = AIConfig(default_model=self.default_claude_config)
 
@@ -28,7 +30,9 @@ class TestClaudeSingleton(unittest.TestCase):
         different_claude_config = ModelConfig(
             provider='anthropic',
             model_name='claude-2',
-            temperature=0.9
+            temperature=0.9,
+            max_tokens=1000,
+            api_key='test-key'
         )
 
         llm1 = create_llm(self.default_claude_config)
@@ -43,7 +47,9 @@ class TestClaudeSingleton(unittest.TestCase):
         sentiment_claude_config = ModelConfig(
             provider='anthropic',
             model_name='claude-instant-1',
-            temperature=0.5
+            temperature=0.5,
+            max_tokens=1000,
+            api_key='test-key'
         )
 
         ai_config = AIConfig(
@@ -66,7 +72,9 @@ class TestClaudeSingleton(unittest.TestCase):
             invalid_config = ModelConfig(
                 provider='anthropic',
                 model_name='invalid-model',
-                temperature=0.7
+                temperature=0.7,
+                max_tokens=1000,
+                api_key='test-key'
             )
             create_llm(invalid_config)
 
