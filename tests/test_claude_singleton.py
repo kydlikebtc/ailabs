@@ -1,16 +1,17 @@
 import unittest
 from unittest.mock import patch
 from src.config import ModelConfig, AIConfig
-from src.llm_factory import create_llm
+from src.llm_factory import create_llm, _llm_instances
 
 class TestClaudeSingleton(unittest.TestCase):
     def setUp(self):
         """Set up test cases"""
+        _llm_instances.clear()
         self.default_claude_config = ModelConfig(
             provider='anthropic',
-            model_name='claude-2',
+            model_name='claude-3-5-sonnet-latest',
             temperature=0.7,
-            max_tokens=1000,
+            max_tokens=8192,
             api_key='test-key'
         )
         self.ai_config = AIConfig(default_model=self.default_claude_config)
@@ -29,9 +30,9 @@ class TestClaudeSingleton(unittest.TestCase):
         # Create a different config
         different_claude_config = ModelConfig(
             provider='anthropic',
-            model_name='claude-2',
+            model_name='claude-3-5-sonnet-latest',
             temperature=0.9,
-            max_tokens=1000,
+            max_tokens=8192,
             api_key='test-key'
         )
 
@@ -46,9 +47,9 @@ class TestClaudeSingleton(unittest.TestCase):
         # Create agent-specific config
         sentiment_claude_config = ModelConfig(
             provider='anthropic',
-            model_name='claude-instant-1',
+            model_name='claude-3-5-haiku-latest',
             temperature=0.5,
-            max_tokens=1000,
+            max_tokens=8192,
             api_key='test-key'
         )
 
@@ -63,7 +64,7 @@ class TestClaudeSingleton(unittest.TestCase):
 
         # Should be different instances due to different configs
         self.assertIsNot(default_model, sentiment_model)
-        self.assertEqual(sentiment_model.model, 'claude-instant-1')
+        self.assertEqual(sentiment_model.model, 'claude-3-5-haiku-latest')
 
     def test_claude_error_handling(self):
         """Test error handling for invalid Claude configurations"""
@@ -73,7 +74,7 @@ class TestClaudeSingleton(unittest.TestCase):
                 provider='anthropic',
                 model_name='invalid-model',
                 temperature=0.7,
-                max_tokens=1000,
+                max_tokens=8192,
                 api_key='test-key'
             )
             create_llm(invalid_config)
@@ -83,9 +84,9 @@ class TestClaudeSingleton(unittest.TestCase):
         """Test that Claude is created with correct parameters"""
         config = ModelConfig(
             provider='anthropic',
-            model_name='claude-2',
+            model_name='claude-3-5-sonnet-latest',
             temperature=0.8,
-            max_tokens=1000,
+            max_tokens=8192,
             api_key='test-key'
         )
 
@@ -93,9 +94,9 @@ class TestClaudeSingleton(unittest.TestCase):
 
         # Verify Claude was created with correct parameters
         mock_claude.assert_called_once_with(
-            model='claude-2',
+            model='claude-3-5-sonnet-latest',
             temperature=0.8,
-            max_tokens=1000,
+            max_tokens=8192,
             anthropic_api_key='test-key'
         )
 
