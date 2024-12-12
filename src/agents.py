@@ -386,7 +386,6 @@ def sentiment_agent(state: AgentState):
         "data": data,
     }
 
-
 ##### Risk Management Agent #####
 def risk_management_agent(state: AgentState):
     """Evaluates portfolio risk and sets position limits"""
@@ -471,7 +470,7 @@ def portfolio_management_agent(state: AgentState):
     sentiment_message = next(msg for msg in state["messages"] if msg.name == "sentiment_agent")
     risk_message = next(msg for msg in state["messages"] if msg.name == "risk_management_agent")
 
-    # Create LLM instance for portfolio management
+    # Get the LLM for this agent
     llm = create_llm(ai_config.get_model_for_agent('portfolio_management_agent'))
 
     # Create the prompt template
@@ -558,34 +557,33 @@ def show_agent_reasoning(output, agent_name):
 ##### Run the Hedge Fund #####
 def run_hedge_fund(
     ticker: str,
-    start_date: str = None,
-    end_date: str = None,
-    portfolio: dict = None,
+    start_date: str,
+    end_date: str,
+    portfolio: dict,
     ai_config: Optional[AIConfig] = None,
     show_reasoning: bool = False
 ):
-    """Run the hedge fund simulation with the given parameters."""
-    # Update global AI configuration if provided
     if ai_config:
         globals()['ai_config'] = ai_config
-
-    # Initialize portfolio if not provided
-    if portfolio is None:
-        portfolio = {"cash": 1000000, "positions": {}}
-
-    # Return the final state
-    return workflow.invoke({
-        "messages": [],
-        "data": {
-            "ticker": ticker,
-            "start_date": start_date,
-            "end_date": end_date,
-            "portfolio": portfolio,
+    final_state = app.invoke(
+        {
+            "messages": [
+                HumanMessage(
+                    content="Make a trading decision based on the provided data.",
+                )
+            ],
+            "data": {
+                "ticker": ticker,
+                "portfolio": portfolio,
+                "start_date": start_date,
+                "end_date": end_date,
+            },
+            "metadata": {
+                "show_reasoning": show_reasoning,
+            }
         },
-        "metadata": {
-            "show_reasoning": show_reasoning
-        }
-    })
+    )
+    return final_state["messages"][-1].content
 
 # Define the new workflow
 workflow = StateGraph(AgentState)
