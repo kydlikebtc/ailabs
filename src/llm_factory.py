@@ -1,6 +1,6 @@
 from langchain_openai import ChatOpenAI
 from langchain_anthropic import ChatAnthropic
-from config import ModelConfig
+from src.config import ModelConfig
 
 def create_llm(config: ModelConfig):
     if config.provider == 'openai':
