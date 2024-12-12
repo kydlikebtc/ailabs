@@ -63,7 +63,7 @@ class TestClaudeSingleton(unittest.TestCase):
 
         # Should be different instances due to different configs
         self.assertIsNot(default_model, sentiment_model)
-        self.assertEqual(sentiment_model._model_name, 'claude-instant-1')
+        self.assertEqual(sentiment_model.model, 'claude-instant-1')
 
     def test_claude_error_handling(self):
         """Test error handling for invalid Claude configurations"""
