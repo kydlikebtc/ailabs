@@ -456,7 +456,7 @@ def risk_management_agent(state: AgentState):
     if show_reasoning:
         show_agent_reasoning(message.content, "Risk Management Agent")
 
-    return {"messages": state["messages"] + [message]}
+    return {"messages": list(state["messages"]) + [message]}
 
 
 ##### Portfolio Management Agent #####
@@ -538,7 +538,7 @@ def portfolio_management_agent(state: AgentState):
     if show_reasoning:
         show_agent_reasoning(message.content, "Portfolio Management Agent")
 
-    return {"messages": state["messages"] + [message]}
+    return {"messages": list(state["messages"]) + [message]}
 
 def show_agent_reasoning(output, agent_name):
     print(f"\n{'=' * 10} {agent_name.center(28)} {'=' * 10}")
@@ -558,9 +558,9 @@ def show_agent_reasoning(output, agent_name):
 ##### Run the Hedge Fund #####
 def run_hedge_fund(
     ticker: str,
-    start_date: str = None,
-    end_date: str = None,
-    portfolio: dict = None,
+    start_date: Optional[str] = None,
+    end_date: Optional[str] = None,
+    portfolio: Optional[dict] = None,
     ai_config: Optional[AIConfig] = None,
     show_reasoning: bool = False
 ):

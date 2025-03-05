@@ -32,9 +32,9 @@ def create_llm(config: ModelConfig):
             raise ValueError(f"Invalid Anthropic model name. Must be one of: {VALID_CLAUDE_MODELS}")
 
         if 'claude-3-5' in config.model_name:
-            max_tokens = min(config.max_tokens, 8192)
+            max_tokens = min(config.max_tokens or 8192, 8192)
         else:
-            max_tokens = min(config.max_tokens, 4096)
+            max_tokens = min(config.max_tokens or 4096, 4096)
 
         instance = ChatAnthropic(
             model=config.model_name,
