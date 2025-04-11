@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from './ui/button';
-import { Home, MessageSquare, BarChart2, User, Settings, LogOut } from 'lucide-react';
+import { Home, MessageSquare, BarChart2, User, Settings, LogOut, TrendingUp, AlertTriangle } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
 import { authService } from '../services/authService';
 
@@ -26,8 +26,8 @@ function NavItem({ onClick, icon, children, active }: NavItemProps) {
 }
 
 interface MainNavProps {
-  currentPage: 'dashboard' | 'suggestions';
-  onNavigate: (page: 'dashboard' | 'suggestions') => void;
+  currentPage: 'dashboard' | 'suggestions' | 'analysis' | 'trending' | 'account' | 'settings';
+  onNavigate: (page: 'dashboard' | 'suggestions' | 'analysis' | 'trending' | 'account' | 'settings') => void;
 }
 
 export function MainNav({ currentPage, onNavigate }: MainNavProps) {
@@ -60,23 +60,30 @@ export function MainNav({ currentPage, onNavigate }: MainNavProps) {
             Tweet Suggestions
           </NavItem>
           <NavItem 
-            onClick={() => {}} 
+            onClick={() => onNavigate('analysis')} 
             icon={<BarChart2 className="h-4 w-4" />} 
-            active={false}
+            active={currentPage === 'analysis'}
           >
             Tweet Analysis
           </NavItem>
           <NavItem 
-            onClick={() => {}} 
+            onClick={() => onNavigate('trending')} 
+            icon={<TrendingUp className="h-4 w-4" />} 
+            active={currentPage === 'trending'}
+          >
+            Trending Tweets
+          </NavItem>
+          <NavItem 
+            onClick={() => onNavigate('account')} 
             icon={<User className="h-4 w-4" />} 
-            active={false}
+            active={currentPage === 'account'}
           >
             Account
           </NavItem>
           <NavItem 
-            onClick={() => {}} 
+            onClick={() => onNavigate('settings')} 
             icon={<Settings className="h-4 w-4" />} 
-            active={false}
+            active={currentPage === 'settings'}
           >
             Settings
           </NavItem>

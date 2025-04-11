@@ -6,6 +6,7 @@ import os
 
 from app.routes.twitter import router as twitter_router
 from app.routes.auth import router as auth_router, get_current_user
+from app.routes.twitter_analysis import router as twitter_analysis_router
 from app.models.user import User
 
 load_dotenv()
@@ -27,6 +28,7 @@ app.add_middleware(
 
 app.include_router(twitter_router)
 app.include_router(auth_router)
+app.include_router(twitter_analysis_router)
 
 @app.get("/healthz")
 async def healthz():
