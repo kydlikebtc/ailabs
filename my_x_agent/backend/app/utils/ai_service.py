@@ -167,9 +167,15 @@ class AIService:
         
         return suggestions
     
-    def generate_reply_options(self, tweet_text: str, count: int = 3) -> List[dict]:
+    def generate_reply_options(self, tweet_text: str, count: int = 3, is_mention: bool = False, trending_score: float = 0.0) -> List[dict]:
         """
         Generate reply options for a given tweet
+        
+        Parameters:
+        - tweet_text: The text of the tweet to reply to
+        - count: Number of reply options to generate
+        - is_mention: Whether this tweet is mentioning the user's account
+        - trending_score: If not a mention, the trending score of the tweet (0.0-1.0)
         """
         
         sentiment = self.analyze_tweet_sentiment(tweet_text)
@@ -193,6 +199,18 @@ class AIService:
             f"I have a different perspective on {topics[0] if topics else 'this'} that I'd like to share."
         ]
         
+        mention_replies = [
+            f"感谢提及我！关于{topics[0] if topics else '这个话题'}，我认为...",
+            f"谢谢标记我！我对{topics[0] if topics else '这个'}的看法是...",
+            f"感谢将我加入关于{topics[0] if topics else '这个话题'}的对话！"
+        ]
+        
+        trending_replies = [
+            f"这条推文正在获得很多关注，我认为{topics[0] if topics else '这个话题'}值得讨论！",
+            f"看到这个热门话题 - {topics[0] if topics else '这个'}确实是当前的热点。",
+            f"当大家都在讨论{topics[0] if topics else '这个热门话题'}时，我想补充..."
+        ]
+        
         options = []
         stances = ["supportive", "neutral", "against"]
         
@@ -201,7 +219,12 @@ class AIService:
             confidence = 0.9 - (i * 0.1)
             
             if stance == "supportive":
-                text = supportive_replies[i % len(supportive_replies)]
+                if is_mention:
+                    text = mention_replies[i % len(mention_replies)]
+                elif trending_score > 0.7:
+                    text = trending_replies[i % len(trending_replies)]
+                else:
+                    text = supportive_replies[i % len(supportive_replies)]
             elif stance == "neutral":
                 text = neutral_replies[i % len(neutral_replies)]
             else:
@@ -210,7 +233,9 @@ class AIService:
             options.append({
                 "text": text,
                 "stance": stance,
-                "confidence": confidence
+                "confidence": confidence,
+                "is_for_mention": is_mention,
+                "is_for_trending": not is_mention and trending_score > 0.5
             })
         
         return options

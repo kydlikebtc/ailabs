@@ -40,6 +40,8 @@ class ReplyOption(BaseModel):
     text: str
     stance: str  # supportive, against, neutral
     confidence: float = 0.0
+    is_for_mention: bool = False
+    is_for_trending: bool = False
 
 class TrendingTopic(BaseModel):
     name: str

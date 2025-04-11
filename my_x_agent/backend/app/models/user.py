@@ -25,9 +25,25 @@ class UserInDB(BaseModel):
     updated_at: datetime = Field(default_factory=datetime.now)
     subscription_tier: SubscriptionTier = SubscriptionTier.FREE
     suggestions_remaining: int = 5
+    
     x_username: Optional[str] = None
     x_access_token: Optional[str] = None
     x_access_token_secret: Optional[str] = None
+    
+    telegram_username: Optional[str] = None
+    telegram_access_token: Optional[str] = None
+    
+    whatsapp_phone: Optional[str] = None
+    whatsapp_access_token: Optional[str] = None
+    
+    signal_phone: Optional[str] = None
+    signal_access_token: Optional[str] = None
+    
+    reachme_username: Optional[str] = None
+    reachme_access_token: Optional[str] = None
+    
+    wallet_address: Optional[str] = None
+    last_payment_txid: Optional[str] = None
 
 class User(BaseModel):
     id: str
@@ -38,6 +54,11 @@ class User(BaseModel):
     subscription_tier: SubscriptionTier
     suggestions_remaining: int
     x_username: Optional[str] = None
+    telegram_username: Optional[str] = None
+    whatsapp_phone: Optional[str] = None
+    signal_phone: Optional[str] = None
+    reachme_username: Optional[str] = None
+    wallet_address: Optional[str] = None
 
 class Token(BaseModel):
     access_token: str

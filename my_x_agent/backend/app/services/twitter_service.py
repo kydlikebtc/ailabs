@@ -218,11 +218,22 @@ class TwitterService:
         
         return suggestions
     
-    def generate_reply_options(self, tweet_text: str, count: int = 3) -> List[ReplyOption]:
+    def generate_reply_options(self, tweet_text: str, count: int = 3, is_mention: bool = False, trending_score: float = 0.0) -> List[ReplyOption]:
         """
         Generate reply options for a given tweet
+        
+        Parameters:
+        - tweet_text: The text of the tweet to reply to
+        - count: Number of reply options to generate
+        - is_mention: Whether this tweet is mentioning the user's account
+        - trending_score: If not a mention, the trending score of the tweet (0.0-1.0)
         """
-        replies_data = self.ai_service.generate_reply_options(tweet_text, count)
+        replies_data = self.ai_service.generate_reply_options(
+            tweet_text, 
+            count, 
+            is_mention, 
+            trending_score
+        )
         
         replies = []
         for reply in replies_data:
@@ -230,7 +241,9 @@ class TwitterService:
                 ReplyOption(
                     text=reply["text"],
                     stance=reply["stance"],
-                    confidence=reply["confidence"]
+                    confidence=reply["confidence"],
+                    is_for_mention=reply.get("is_for_mention", False),
+                    is_for_trending=reply.get("is_for_trending", False)
                 )
             )
         

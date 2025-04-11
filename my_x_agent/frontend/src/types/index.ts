@@ -1,4 +1,26 @@
 
+export type PlatformType = 'twitter' | 'telegram' | 'whatsapp' | 'signal' | 'reachme';
+
+export interface WalletInfo {
+  address: string;
+  connected: boolean;
+}
+
+export interface PaymentRequest {
+  id: string;
+  amount: number;
+  itemType: string;
+  status: 'pending' | 'completed' | 'failed';
+  createdAt: string;
+  paymentAddress: string;
+}
+
+export interface PaymentVerification {
+  txId: string;
+  txHash: string;
+  status: string;
+}
+
 export interface User {
   id: string;
   username: string;
@@ -6,6 +28,11 @@ export interface User {
   subscription_tier: 'free' | 'pro';
   suggestions_remaining: number;
   x_username?: string;
+  telegram_username?: string;
+  whatsapp_phone?: string;
+  signal_phone?: string;
+  reachme_username?: string;
+  wallet_address?: string;
   created_at: string;
   updated_at: string;
 }
@@ -36,6 +63,9 @@ export interface Tweet {
     displayName: string;
     profileImageUrl: string;
   };
+  isMention?: boolean;
+  trendingScore?: number;
+  platform?: PlatformType;
 }
 
 export interface TweetSuggestion {
@@ -64,6 +94,8 @@ export interface ReplyOption {
   text: string;
   stance: 'supportive' | 'against' | 'neutral';
   confidence: number;
+  isForMention?: boolean;
+  isForTrending?: boolean;
 }
 
 export interface Subscription {

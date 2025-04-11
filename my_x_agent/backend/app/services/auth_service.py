@@ -199,3 +199,57 @@ class AuthService:
             suggestions_remaining=updated_user.suggestions_remaining,
             x_username=updated_user.x_username
         )
+        
+    def add_suggestions_to_user(self, email: str, quantity: int) -> Optional[User]:
+        """
+        增加用户可用的推文建议数量
+        """
+        user = self.get_user(email)
+        if not user:
+            return None
+            
+        user_dict = self.users_db[email]
+        current_suggestions = user_dict.get("suggestions_remaining", 0)
+        user_dict["suggestions_remaining"] = current_suggestions + quantity
+        user_dict["updated_at"] = datetime.now()
+        
+        self.users_db[email] = user_dict
+        updated_user = UserInDB(**user_dict)
+        
+        return User(
+            id=updated_user.id,
+            email=updated_user.email,
+            username=updated_user.username,
+            created_at=updated_user.created_at,
+            updated_at=updated_user.updated_at,
+            subscription_tier=updated_user.subscription_tier,
+            suggestions_remaining=updated_user.suggestions_remaining,
+            x_username=updated_user.x_username
+        )
+        
+    def update_user_wallet(self, email: str, tx_hash: str) -> Optional[User]:
+        """
+        更新用户钱包信息
+        """
+        user = self.get_user(email)
+        if not user:
+            return None
+            
+        user_dict = self.users_db[email]
+        user_dict["last_payment_txid"] = tx_hash
+        user_dict["updated_at"] = datetime.now()
+        
+        self.users_db[email] = user_dict
+        updated_user = UserInDB(**user_dict)
+        
+        return User(
+            id=updated_user.id,
+            email=updated_user.email,
+            username=updated_user.username,
+            created_at=updated_user.created_at,
+            updated_at=updated_user.updated_at,
+            subscription_tier=updated_user.subscription_tier,
+            suggestions_remaining=updated_user.suggestions_remaining,
+            x_username=updated_user.x_username,
+            wallet_address=updated_user.wallet_address
+        )
