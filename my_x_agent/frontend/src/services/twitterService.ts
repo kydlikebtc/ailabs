@@ -48,7 +48,12 @@ export const twitterService = {
     return response.json();
   },
 
-  async generateReplyOptions(tweetText: string, count: number = 3): Promise<ReplyOption[]> {
+  async generateReplyOptions(
+    tweetText: string, 
+    count: number = 3, 
+    isMention: boolean = false, 
+    trendingScore: number = 0
+  ): Promise<ReplyOption[]> {
     const token = localStorage.getItem('token');
     
     if (!token) {
@@ -61,7 +66,12 @@ export const twitterService = {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ text: tweetText, count }),
+      body: JSON.stringify({ 
+        text: tweetText, 
+        count,
+        is_mention: isMention,
+        trending_score: trendingScore
+      }),
     });
 
     if (!response.ok) {
